@@ -1,5 +1,5 @@
 # Ignorar archivos CSV generados por ETL
 data/*.csv
 # Excluir archivos de entorno virtual
-venv/
+dash_venv/
 .env
