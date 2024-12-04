@@ -10,6 +10,7 @@ dashboard-interactivo/
 │   ├── .gitkeep        # Mantiene la carpeta en el repositorio (los CSV se ignorarán)
 ├── src/                # Código fuente del proyecto
 │   ├── etl/            # Módulo ETL
+│   │   ├── __init__.py # Indica que se trata de un módulo
 │   │   ├── extract.py  # Extracción de datos desde las APIs
 │   │   ├── transform.py # Transformación de datos
 │   │   ├── load.py      # Carga de datos a CSV

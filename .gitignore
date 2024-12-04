@@ -3,3 +3,7 @@ data/*.csv
 # Excluir archivos de entorno virtual
 dash_venv/
 .env
+# Ignorar archivos compilados de Python
+__pycache__/
+*.pyc
+src/etl/__pycache__/
