@@ -1,5 +1,9 @@
 # src/etl/transform.py
 import pandas as pd
+from dotenv import load_dotenv
+import os
+from datetime import datetime
+from .extract import createDataFrameFromAPI
 
 """Extract user details
 Dado un objeto item (usuario) y detalles sobre las membresías y cursos.
@@ -105,3 +109,33 @@ Limpia un DataFrame eliminando columnas específicas.
 """
 def cleanupDataFrame(df, columns_to_drop):
     return df.drop(columns=columns_to_drop)
+
+def csvFromDF(directorio_salida=None, encoding=None, nomenclatura_salida=None, url=None):
+    """
+    Crea un archivo CSV a partir de un DataFrame obtenido con la función createDataFrameFromAPI.
+    Los parámetros directorio_salida, encoding y nomenclatura_salida son opcionales.
+    Si no se proporcionan, se toman de las variables de entorno OUTPUT_DIRECTORY, OUTPUT_ENCODING y NOMENCLATURA_SALIDA.
+    """
+    # Cargar variables de entorno
+    load_dotenv()
+    # Si no se proporcionan los parámetros, se toman del .env
+    if directorio_salida is None:
+        directorio_salida = os.getenv("OUTPUT_DIRECTORY", "./../data")
+    if encoding is None:
+        encoding = os.getenv("OUTPUT_ENCODING", "latin-1")
+    if nomenclatura_salida is None:
+        nomenclatura_salida = os.getenv("NOMENCLATURA_SALIDA", "completados")
+    # Obtener el DataFrame desde la API (con URL del parámetro o del .env)
+    df = createDataFrameFromAPI(url=url)
+    # Generar timestamp con el formato día, mes, año, hora y minuto
+    timestamp = datetime.now().strftime("%d_%m_%y_%H_%M")
+    # Crear el nombre del archivo de salida
+    filename = f"{nomenclatura_salida}_{timestamp}.csv"
+    # Crear el directorio de salida si no existe
+    if not os.path.exists(directorio_salida):
+        os.makedirs(directorio_salida, exist_ok=True)
+    # Ruta completa del archivo de salida
+    output_path = os.path.join(directorio_salida, filename)
+    # Guardar el DataFrame en un CSV con el encoding especificado
+    df.to_csv(output_path, encoding=encoding, index=False)
+    print(f"Archivo guardado como {output_path}")

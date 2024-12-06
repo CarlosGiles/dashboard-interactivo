@@ -48,3 +48,29 @@ def fetchLessonsFromAPI(url):
     data = response.json()
     df = pd.DataFrame(data)
     return df.drop(columns=['__v'])
+
+def createDataFrameFromAPI(url=None):
+    """
+    Crea un DataFrame a partir de los datos obtenidos de una API.
+    Si no se proporciona una URL, se toma de las variables de entorno.
+
+    Ejecución:
+        df = createDataFrameFromAPI()  Toma la URL desde COMPLETED_API_URL en .env
+        df = createDataFrameFromAPI("https://api.ejemplo.com/otros_datos") Usa la URL proporcionada
+    """
+    # Cargar variables de entorno
+    load_dotenv()
+    # Si no se proporciona una URL como parámetro, se toma del .env
+    if url is None:
+        url = os.getenv("COMPLETED_API_URL")
+        if not url:
+            raise ValueError("No se proporcionó una URL y no se encontró COMPLETED_API_URL en el .env")
+    # Hacer la petición a la API
+    response = requests.get(url)
+    # Lanza un error si la respuesta es 4xx o 5xx
+    response.raise_for_status()
+    # Asumimos que la respuesta es JSON
+    data = response.json()
+    # Convertir los datos JSON en un DataFrame
+    df = pd.DataFrame(data)
+    return df

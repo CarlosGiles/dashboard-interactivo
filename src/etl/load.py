@@ -28,7 +28,8 @@ from .extract import (
     USERS_API_URL,
     LESSONS_API_URL,
     COURSE_DATASET_PATH,
-    MEMBERSHIP_DATASET_PATH
+    MEMBERSHIP_DATASET_PATH,
+    createDataFrameFromAPI
 )
 from .transform import (
     extractUserDetails,
@@ -37,7 +38,8 @@ from .transform import (
     mergeDataframes,
     fillMissingValues,
     convertAndFormatDatetime,
-    cleanupDataFrame
+    cleanupDataFrame,
+    csvFromDF
 )
 
 """Definimos el main
@@ -73,10 +75,11 @@ def trackingModule(base_df):
 if __name__ == "__main__":
     df_base = main()
     final_df = trackingModule(df_base)
-    """### Comprobación del módulo"""
+    csvFromDF()
+    """Comprobación del módulo"""
     # print(final_df.tail(5))
     # Guardamos el DataFrame final en un archivo CSV en el directorio data/
-    final_df.to_csv(OUTPUT_CSV_PATH, index=False, encoding='latin-1')
+    final_df.to_csv(OUTPUT_CSV_PATH, index=False, encoding='utf_8_sig')
 
 """
 Ejecutar este script desde /src con el siguiente comando:
